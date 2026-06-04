@@ -21,7 +21,14 @@ async function run() {
   try {
     await client.connect();
     const db = client.db("job-hunting-server");
-    const jobCollection = db.collection("jobs");
+    const jobCollection = db.collection("newJobs");
+
+    // post
+    app.post('/api/jobs', async(req, res)=>{
+      const job = req.body
+      const result = await jobCollection.insertOne(job)
+      res.json(result)
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
