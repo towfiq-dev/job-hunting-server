@@ -23,17 +23,38 @@ async function run() {
     const db = client.db("job-hunting-server");
     const jobCollection = db.collection("newJobs");
     const companyCollection = db.collection("companies");
+    const userCollection = db.collection("user");
 
     // post
     app.post("/api/jobs", async (req, res) => {
       const job = req.body;
-      const result = await jobCollection.insertOne(job);
+      const newJob = {
+        ...job,
+        createdAt: new Date(),
+      };
+      const result = await jobCollection.insertOne(newJob);
       res.json(result);
     });
 
     app.post("/api/companies", async (req, res) => {
       const company = req.body;
-      const result = await companyCollection.insertOne(company);
+      const newCompany = {
+        ...company,
+        createdAt: new Date(),
+      };
+      const result = await companyCollection.insertOne(newCompany);
+      res.send(result);
+    });
+
+    app.get("/api/users", async (req, res) => {
+      const cursor = usersCollection.find().skip(6);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/api/companies", async (req, res) => {
+      const cursor = companyCollection.find().skip(4);
+      const result = await cursor.toArray();
       res.send(result);
     });
 
