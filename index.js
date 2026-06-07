@@ -24,6 +24,7 @@ async function run() {
     const jobCollection = db.collection("newJobs");
     const companyCollection = db.collection("companies");
     const userCollection = db.collection("user");
+    const applicationsCollection = db.collection("applicantUser");
 
     // post
     app.post("/api/jobs", async (req, res) => {
@@ -90,6 +91,17 @@ async function run() {
       const result = await cursor.toArray(cursor);
       res.send(result);
     });
+
+    // applicantUser
+    app.post('/api/applications', async(req, res)=>{
+      const application = req.body
+      const newApplication ={
+        ...application,
+        createdAt: new Date()
+      }
+      const result = await applicationsCollection.insertOne(newApplication)
+      res.send(result)
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log(
