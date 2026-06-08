@@ -25,7 +25,16 @@ async function run() {
     const companyCollection = db.collection("companies");
     const userCollection = db.collection("user");
     const applicationsCollection = db.collection("applicantUser");
+    const planCollection = db.collection('plans')
 
+    app.get('/api/plans', async(req, res)=>{
+      const query = {}
+      if (req.query.plan_id) {
+        query.id = req.query.plan_id
+      }
+      const result = await planCollection.findOne(query)
+      res.send(result)
+    })
     // post
     app.post("/api/jobs", async (req, res) => {
       const job = req.body;
